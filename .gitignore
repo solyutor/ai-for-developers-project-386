@@ -31,5 +31,8 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# Vite
+.vite/
+
 # TypeSpec output
 tsp-output/
