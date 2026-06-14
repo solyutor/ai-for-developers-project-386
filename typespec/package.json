@@ -6,7 +6,10 @@
   "dependencies": {
     "@typespec/compiler": "latest",
     "@typespec/http": "latest",
-    "@typespec/rest": "latest",
-    "@typespec/openapi3": "latest"
+    "@typespec/openapi3": "latest",
+    "@typespec/rest": "latest"
+  },
+  "devDependencies": {
+    "@stoplight/prism-cli": "^5.15.11"
   }
 }
