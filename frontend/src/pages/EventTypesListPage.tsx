@@ -8,6 +8,9 @@ export function EventTypesListPage() {
       <Button component={Link} to="/admin/event-types/new" variant="light">
         Создать новый
       </Button>
+      <Button component={Link} to="/admin/bookings" variant="outline">
+        Предстоящие встречи
+      </Button>
     </Stack>
   )
 }
