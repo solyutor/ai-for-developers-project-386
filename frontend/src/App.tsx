@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { EventTypeFormPage } from './pages/EventTypeFormPage'
 import { EventTypesListPage } from './pages/EventTypesListPage'
 import { OwnerBookingsPage } from './pages/OwnerBookingsPage'
+import { GuestEventTypesPage } from './pages/GuestEventTypesPage'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Route path="/" element={<EventTypesListPage />} />
               <Route path="/admin/event-types/new" element={<EventTypeFormPage />} />
               <Route path="/admin/bookings" element={<OwnerBookingsPage />} />
+              <Route path="/guest/event-types" element={<GuestEventTypesPage />} />
             </Routes>
           </Stack>
         </Container>
