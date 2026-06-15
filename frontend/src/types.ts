@@ -23,3 +23,17 @@ export interface EventType {
   durationMinutes: number
   slotIntervalMinutes: number
 }
+
+export interface Booking {
+  id: string
+  slotId: string
+  guestName: string
+  guestEmail: string
+  createdAt: string
+}
+
+export interface CreateBookingRequest {
+  slotId: string
+  guestName: string
+  guestEmail: string
+}

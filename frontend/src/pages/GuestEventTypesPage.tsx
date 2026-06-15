@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Title, Text, Stack, Card, Badge, SimpleGrid, Loader, Alert } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
 import { fetchEventTypes } from '../api'
 import type { EventType } from '../types'
 
 export function GuestEventTypesPage() {
+  const navigate = useNavigate()
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -42,7 +44,15 @@ export function GuestEventTypesPage() {
       {!loading && !error && eventTypes.length > 0 && (
         <SimpleGrid cols={{ base: 1, sm: 2 }}>
           {eventTypes.map((et) => (
-            <Card key={et.id} shadow="sm" padding="lg" radius="md" withBorder>
+            <Card
+              key={et.id}
+              shadow="sm"
+              padding="lg"
+              radius="md"
+              withBorder
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate(`/guest/book/${et.id}`)}
+            >
               <Stack gap="xs">
                 <Title order={4}>{et.name}</Title>
                 <Text c="dimmed" size="sm">
