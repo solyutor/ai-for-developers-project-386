@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import { Container, Title, Stack, Loader, Alert } from '@mantine/core'
 import { IconAlertCircle } from '@tabler/icons-react'
-import { MonthView, ScheduleHeader, type ScheduleEventData, type DateStringValue } from '@mantine/schedule'
+import { WeekView, type ScheduleEventData, type DateStringValue } from '@mantine/schedule'
 import { fetchBookings, fetchEventTypes } from '../api'
 import type { BookingWithSlot, EventType } from '../types'
 
@@ -26,7 +26,9 @@ function buildEvents(bookings: BookingWithSlot[], eventTypes: EventType[]): Sche
 }
 
 export function OwnerBookingsPage() {
-  const [date, setDate] = useState<DateStringValue>(dayjs().format('YYYY-MM-DD'))
+  const [date, setDate] = useState<DateStringValue>(
+    dayjs().day(1).format('YYYY-MM-DD') as DateStringValue
+  )
   const [events, setEvents] = useState<ScheduleEventData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -59,51 +61,17 @@ export function OwnerBookingsPage() {
         )}
 
         {!loading && !error && (
-          <>
-            <ScheduleHeader>
-              <ScheduleHeader.Previous
-                onClick={() =>
-                  setDate(
-                    dayjs(date).subtract(1, 'month').startOf('month').format('YYYY-MM-DD') as DateStringValue
-                  )
-                }
-              />
-              <ScheduleHeader.MonthYearSelect
-                yearValue={dayjs(date).year()}
-                monthValue={dayjs(date).month()}
-                onYearChange={(year) =>
-                  setDate(
-                    dayjs(date).year(year).startOf('month').format('YYYY-MM-DD') as DateStringValue
-                  )
-                }
-                onMonthChange={(month) =>
-                  setDate(
-                    dayjs(date).month(month).startOf('month').format('YYYY-MM-DD') as DateStringValue
-                  )
-                }
-              />
-              <ScheduleHeader.Next
-                onClick={() =>
-                  setDate(
-                    dayjs(date).add(1, 'month').startOf('month').format('YYYY-MM-DD') as DateStringValue
-                  )
-                }
-              />
-              <ScheduleHeader.Today
-                onClick={() => setDate(dayjs().format('YYYY-MM-DD') as DateStringValue)}
-              />
-            </ScheduleHeader>
-
-            <MonthView
-              date={date}
-              onDateChange={setDate}
-              events={events}
-              locale="ru"
-              firstDayOfWeek={1}
-              withHeader={false}
-              maxEventsPerDay={4}
-            />
-          </>
+          <WeekView
+            date={date}
+            onDateChange={setDate}
+            events={events}
+            locale="ru"
+            firstDayOfWeek={1}
+            highlightToday
+            withHeader
+            startTime="07:00:00"
+            endTime="20:00:00"
+          />
         )}
       </Stack>
     </Container>
