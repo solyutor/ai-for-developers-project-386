@@ -1,28 +1,9 @@
-import { useState } from 'react'
-import { Title, Text, Card, SimpleGrid, Button, Stack, TextInput } from '@mantine/core'
+import { Title, Text, Card, SimpleGrid, Stack } from '@mantine/core'
 import { IconBuilding, IconUser } from '@tabler/icons-react'
 import { useNavigate } from 'react-router-dom'
 
 export function RoleSelectPage() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [showEmail, setShowEmail] = useState(false)
-
-  const isValidEmail = email.trim().includes('@')
-
-  function handleOwnerClick() {
-    navigate('/admin/bookings')
-  }
-
-  function handleGuestClick() {
-    setShowEmail(true)
-  }
-
-  function handleGuestSubmit() {
-    if (!isValidEmail) return
-    localStorage.setItem('guestEmail', email.trim())
-    navigate('/guest/event-types')
-  }
 
   return (
     <Stack gap="md">
@@ -35,7 +16,7 @@ export function RoleSelectPage() {
           radius="md"
           withBorder
           style={{ cursor: 'pointer' }}
-          onClick={handleOwnerClick}
+          onClick={() => navigate('/admin/bookings')}
         >
           <Stack gap="sm" align="center">
             <IconBuilding size={48} />
@@ -52,7 +33,7 @@ export function RoleSelectPage() {
           radius="md"
           withBorder
           style={{ cursor: 'pointer' }}
-          onClick={handleGuestClick}
+          onClick={() => navigate('/guest/guest-info')}
         >
           <Stack gap="sm" align="center">
             <IconUser size={48} />
@@ -63,23 +44,6 @@ export function RoleSelectPage() {
           </Stack>
         </Card>
       </SimpleGrid>
-
-      {showEmail && (
-        <Stack gap="sm">
-          <TextInput
-            label="Email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleGuestSubmit()
-            }}
-          />
-          <Button onClick={handleGuestSubmit} disabled={!isValidEmail}>
-            Продолжить
-          </Button>
-        </Stack>
-      )}
     </Stack>
   )
 }
