@@ -22,5 +22,5 @@ lint:
 	cd frontend && npm run lint
 
 stop:
-	pkill -f prism || true
-	pkill -f vite || true
+	@lsof -ti:4010 | xargs kill -9 2>/dev/null || true
+	@lsof -ti:5173 | xargs kill -9 2>/dev/null || true
