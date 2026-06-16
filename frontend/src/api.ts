@@ -1,4 +1,4 @@
-import type { Booking, BookingWithSlot, CreateBookingRequest, EventType, Slot } from './types'
+import type { Booking, BookingWithSlot, CreateBookingRequest, CreateEventTypeRequest, EventType, Slot } from './types'
 
 const API_BASE = '/api'
 
@@ -42,4 +42,8 @@ export function fetchAvailableSlots(eventTypeId: string): Promise<Slot[]> {
 
 export function createBooking(data: CreateBookingRequest): Promise<Booking> {
   return postRequest<Booking>('/public/bookings', data)
+}
+
+export function createEventType(data: CreateEventTypeRequest): Promise<EventType> {
+  return postRequest<EventType>('/event-types', data)
 }

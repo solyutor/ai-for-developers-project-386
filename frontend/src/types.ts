@@ -37,3 +37,10 @@ export interface CreateBookingRequest {
   guestName: string
   guestEmail: string
 }
+
+export interface CreateEventTypeRequest {
+  name: string
+  description: string
+  durationMinutes: number
+  slotIntervalMinutes: number
+}
