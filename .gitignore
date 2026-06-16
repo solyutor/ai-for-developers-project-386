@@ -36,3 +36,10 @@ Thumbs.db
 
 # TypeSpec output
 tsp-output/
+
+# .NET
+bin/
+obj/
+*.db
+*.db-shm
+*.db-wal

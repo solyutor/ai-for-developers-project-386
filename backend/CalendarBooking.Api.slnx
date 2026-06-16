@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CalendarBooking.Api.Tests/CalendarBooking.Api.Tests.csproj" />
+  <Project Path="CalendarBooking.Api/CalendarBooking.Api.csproj" />
+</Solution>
