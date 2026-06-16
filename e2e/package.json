@@ -1,0 +1,19 @@
+{
+  "name": "e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "mcp": "npx @playwright/mcp@latest",
+    "mcp:headless": "npx @playwright/mcp@latest --headless",
+    "postinstall": "npx playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/mcp": "^0.0.76",
+    "@playwright/test": "^1.53.0",
+    "playwright": "^1.53.0",
+    "@types/node": "^24.12.3"
+  }
+}
