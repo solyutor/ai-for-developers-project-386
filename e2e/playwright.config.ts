@@ -31,10 +31,12 @@ export default defineConfig({
       timeout: 30000,
     },
     {
-      command: 'cd ../typespec && npx prism mock tsp-output/openapi/openapi.yaml --port 4010',
+      command: process.env.CI
+        ? 'cd ../backend/CalendarBooking.Api && dotnet run --no-build'
+        : 'cd ../typespec && npx prism mock tsp-output/openapi/openapi.yaml --port 4010',
       port: 4010,
       reuseExistingServer: !process.env.CI,
-      timeout: 30000,
+      timeout: process.env.CI ? 60000 : 30000,
     },
   ],
   projects: [
