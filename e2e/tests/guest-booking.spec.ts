@@ -38,8 +38,7 @@ test.describe('Guest Booking Flow', () => {
     await page.waitForTimeout(200)
     await page.getByRole('button', { name: 'Продолжить' }).click()
     await expect(page).toHaveURL(/\/guest\/book/)
-
-    await page.waitForLoadState('networkidle')
+    await expect(page.getByRole('heading', { name: 'Выберите событие' })).toBeVisible({ timeout: 10000 })
 
     const noTypes = page.getByText('Нет доступных типов событий')
     if (await noTypes.isVisible()) {

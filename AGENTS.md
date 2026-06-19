@@ -82,13 +82,13 @@ make test                             # runs backend .NET tests only
 ### E2E (Playwright)
 ```bash
 make e2e-install      # install deps + Chromium browser
-make e2e              # run all E2E tests (headless, auto-starts Vite + Prism)
+make e2e              # run all E2E tests (headless, auto-starts Vite + real .NET backend)
 make e2e-headed       # run tests in visible browser
 make e2e-ui           # Playwright UI debugger
 make e2e-mcp          # start Playwright MCP server (headed)
 make e2e-mcp-headless # start Playwright MCP server (headless)
 ```
 
-E2E Playwright config (`e2e/playwright.config.ts`) auto-starts both Vite (port 5173) and the API backend (Prism mock in local dev, .NET in CI) via `webServer`. Existing servers on those ports are reused when running outside CI.
+E2E Playwright config (`e2e/playwright.config.ts`) auto-starts both Vite (port 5173) and the real .NET backend (port 4010) via `webServer`. The backend uses a temporary SQLite database at `/tmp/e2e-calendar.db` (deleted before each run). Existing servers on those ports are reused when running outside CI.
 
 Playwright MCP server is also registered in `.opencode/mcp.json` — opencode can use browser tools (`browser_navigate`, `browser_click`, etc.) during sessions. See `.opencode/instructions.md` for browser tool usage guidance.

@@ -32,9 +32,12 @@ export default defineConfig({
     },
     {
       command: process.env.CI
-        ? 'cd ../backend/CalendarBooking.Api && dotnet run --no-build'
-        : 'cd ../typespec && npx prism mock tsp-output/openapi/openapi.yaml --port 4010',
+        ? 'rm -f /tmp/e2e-calendar.db && cd ../backend/CalendarBooking.Api && dotnet run --no-build'
+        : 'rm -f /tmp/e2e-calendar.db && cd ../backend/CalendarBooking.Api && dotnet run',
       port: 4010,
+      env: {
+        ConnectionStrings__Default: 'Data Source=/tmp/e2e-calendar.db',
+      },
       reuseExistingServer: !process.env.CI,
       timeout: process.env.CI ? 60000 : 30000,
     },

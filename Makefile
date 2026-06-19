@@ -25,11 +25,11 @@ e2e-install:
 e2e: e2e-install
 	cd e2e && npx playwright test
 
-e2e-ui: e2e-install
-	cd e2e && npx playwright test --ui
-
 e2e-headed: e2e-install
 	cd e2e && npx playwright test --headed
+
+e2e-ui: e2e-install
+	cd e2e && npx playwright test --ui
 
 e2e-mcp:
 	cd e2e && npx @playwright/mcp@latest

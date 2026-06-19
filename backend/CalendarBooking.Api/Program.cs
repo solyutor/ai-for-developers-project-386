@@ -13,6 +13,12 @@ builder.WebHost.UseUrls("http://0.0.0.0:4010");
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+}
+
 // ─── Admin endpoints ───
 
 var admin = app.MapGroup("/api").WithTags("Admin");

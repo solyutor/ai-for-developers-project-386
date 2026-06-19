@@ -16,7 +16,7 @@ The Playwright MCP server exposes browser tools like:
 Ensure the app is running:
 
 ```bash
-make prism     # API mock on port 4010
+make backend   # real .NET backend on port 4010
 make frontend  # Vite on port 5173
 ```
 
