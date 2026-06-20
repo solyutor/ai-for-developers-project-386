@@ -35,12 +35,23 @@ jobs:
         run: npm ci
         working-directory: frontend
 
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+
       - name: Install E2E dependencies
         run: npm ci
         working-directory: e2e
 
-      - name: Run Playwright tests
-        run: npx playwright test
+      - name: Copy frontend to backend wwwroot
+        run: |
+          rm -rf wwwroot
+          mkdir -p wwwroot
+          cp -r ../frontend/dist/* wwwroot/
+        working-directory: backend/CalendarBooking.Api
+
+      - name: Run Playwright tests (backend-served)
+        run: npx playwright test --config=playwright.backend.config.ts
         working-directory: e2e
 
       - uses: actions/upload-artifact@v4

@@ -11,6 +11,7 @@ yarn-error.log*
 dist/
 build/
 *.tgz
+wwwroot/
 
 # Environment variables
 .env

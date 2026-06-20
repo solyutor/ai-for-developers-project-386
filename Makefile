@@ -1,4 +1,6 @@
-.PHONY: dev backend prism frontend test build lint stop check e2e-install e2e e2e-ui e2e-headed e2e-mcp e2e-mcp-headless
+.PHONY: dev backend prism frontend test build lint stop check e2e-install e2e e2e-ui e2e-headed e2e-mcp e2e-mcp-headless deploy-local e2e-backend
+
+PORT ?= 4010
 
 dev:
 	$(MAKE) stop
@@ -16,6 +18,10 @@ prism:
 frontend:
 	cd frontend && npm run dev
 
+deploy-local: stop
+	docker build -t calendar-booking .
+	docker run --rm -p $(PORT):$(PORT) -e PORT=$(PORT) calendar-booking
+
 test:
 	dotnet test backend/CalendarBooking.Api.Tests
 
@@ -27,6 +33,13 @@ e2e: e2e-install
 
 e2e-headed: e2e-install
 	cd e2e && npx playwright test --headed
+
+e2e-backend: e2e-install
+	cd frontend && npm run build
+	rm -rf backend/CalendarBooking.Api/wwwroot
+	mkdir -p backend/CalendarBooking.Api/wwwroot
+	cp -r frontend/dist/* backend/CalendarBooking.Api/wwwroot/
+	cd e2e && npx playwright test --config=playwright.backend.config.ts
 
 e2e-ui: e2e-install
 	cd e2e && npx playwright test --ui
@@ -44,8 +57,8 @@ lint:
 	cd frontend && npm run lint
 
 check:
-	@curl -sf http://localhost:4010/api/event-types > /dev/null && echo "✓ Backend OK" || echo "✗ Backend not responding"
-	@curl -sf http://localhost:5173/ > /dev/null && echo "✓ Frontend OK" || echo "✗ Frontend not responding"
+	@curl -sf http://localhost:$(PORT)/api/event-types > /dev/null && echo "✓ Backend OK" || echo "✗ Backend not responding"
+	@curl -sf http://localhost:$(PORT)/ | grep -q 'root' 2>/dev/null && echo "✓ Frontend OK" || echo "✗ Frontend not responding"
 	@which npx > /dev/null && echo "✓ Node.js tools OK" || echo "✗ npx not found"
 
 stop:

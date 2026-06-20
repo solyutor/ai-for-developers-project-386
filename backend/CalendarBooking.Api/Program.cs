@@ -9,9 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-builder.WebHost.UseUrls("http://0.0.0.0:4010");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "4010";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 var app = builder.Build();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -143,6 +147,8 @@ publicGroup.MapPost("/bookings", async (CreateBookingRequest req, AppDbContext d
     await db.SaveChangesAsync();
     return Results.Created($"/api/bookings/{booking.Id}", booking);
 });
+
+app.MapFallbackToFile("index.html");
 
 app.Run();
 
