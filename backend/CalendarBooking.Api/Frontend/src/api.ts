@@ -36,8 +36,9 @@ export function fetchEventType(id: string): Promise<EventType> {
   return request<EventType>(`/public/event-types/${id}`)
 }
 
-export function fetchAvailableSlots(eventTypeId: string): Promise<Slot[]> {
-  return request<Slot[]>(`/public/event-types/${eventTypeId}/slots`)
+export function fetchAvailableSlots(eventTypeId: string, email?: string): Promise<Slot[]> {
+  const params = email ? `?email=${encodeURIComponent(email)}` : ''
+  return request<Slot[]>(`/public/event-types/${eventTypeId}/slots${params}`)
 }
 
 export function createBooking(data: CreateBookingRequest): Promise<Booking> {

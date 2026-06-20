@@ -131,7 +131,7 @@ interface Public {
 
   @get
   @route("/api/public/event-types/{id}/slots")
-  getAvailableSlots(@path id: uuid): Slot[];
+  getAvailableSlots(@path id: uuid, @query email?: string): Slot[];
 
   @post
   @route("/api/public/bookings")

@@ -118,12 +118,23 @@ publicGroup.MapGet("/event-types/{id:guid}", async (Guid id, AppDbContext db) =>
     return entity is null ? Results.NotFound() : Results.Ok(entity);
 });
 
-publicGroup.MapGet("/event-types/{id:guid}/slots", async (Guid id, AppDbContext db) =>
+publicGroup.MapGet("/event-types/{id:guid}/slots", async (Guid id, string? email, AppDbContext db) =>
 {
     var eventType = await db.EventTypes.FindAsync(id);
     if (eventType is null) return Results.NotFound();
 
     var slots = await EnsureSlotsAsync(db, eventType, CancellationToken.None);
+
+    if (!string.IsNullOrEmpty(email))
+    {
+        var guestSlotIds = await db.Bookings
+            .Where(b => b.GuestEmail == email)
+            .Select(b => b.SlotId)
+            .ToListAsync();
+
+        return Results.Ok(slots.Where(s => !s.IsOccupied || guestSlotIds.Contains(s.Id)).ToList());
+    }
+
     return Results.Ok(slots.Where(s => !s.IsOccupied).ToList());
 });
 

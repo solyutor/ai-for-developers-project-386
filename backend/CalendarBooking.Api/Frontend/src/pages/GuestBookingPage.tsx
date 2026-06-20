@@ -21,16 +21,14 @@ import { fetchEventTypes, fetchEventType, fetchAvailableSlots, createBooking } f
 import type { EventType, Slot } from '../types'
 
 function buildSlotEvents(slots: Slot[]): ScheduleEventData[] {
-  return slots
-    .filter((s) => !s.isOccupied)
-    .map((slot) => ({
-      id: slot.id,
-      title: dayjs(slot.startTime).format('HH:mm'),
-      start: dayjs(slot.startTime).format('YYYY-MM-DD HH:mm:ss'),
-      end: dayjs(slot.endTime).format('YYYY-MM-DD HH:mm:ss'),
-      color: 'green' as const,
-      payload: { slotId: slot.id },
-    }))
+  return slots.map((slot) => ({
+    id: slot.id,
+    title: dayjs(slot.startTime).format('HH:mm'),
+    start: dayjs(slot.startTime).format('YYYY-MM-DD HH:mm:ss'),
+    end: dayjs(slot.endTime).format('YYYY-MM-DD HH:mm:ss'),
+    color: slot.isOccupied ? 'blue' as const : 'green' as const,
+    payload: { slotId: slot.id, isMyBooking: slot.isOccupied },
+  }))
 }
 
 export function GuestBookingPage() {
@@ -73,9 +71,10 @@ export function GuestBookingPage() {
       setLoadingSlots(true)
       setSelectedSlot(null)
       try {
+        const guestEmail = localStorage.getItem('guestEmail') ?? undefined
         const [et, s] = await Promise.all([
           fetchEventType(selectedEventTypeId!),
-          fetchAvailableSlots(selectedEventTypeId!),
+          fetchAvailableSlots(selectedEventTypeId!, guestEmail),
         ])
         if (!cancelled) {
           setEventType(et)
@@ -91,11 +90,11 @@ export function GuestBookingPage() {
     return () => { cancelled = true }
   }, [selectedEventTypeId])
 
-  const availableSlots = slots.filter((s) => !s.isOccupied)
   const events = buildSlotEvents(slots)
-  const daySlots = availableSlots.filter((s) =>
+  const daySlots = slots.filter((s) =>
     dayjs(s.startTime).isSame(dayjs(selectedDate), 'day'),
   )
+  const selectableSlots = daySlots.filter((s) => !s.isOccupied)
 
   async function handleBooking() {
     if (!selectedSlot) return
@@ -255,6 +254,7 @@ export function GuestBookingPage() {
               <MonthView
                 date={selectedDate}
                 onDateChange={setSelectedDate}
+                onDayClick={(date) => setSelectedDate(date)}
                 events={events}
                 locale="ru"
                 firstDayOfWeek={1}
@@ -262,11 +262,30 @@ export function GuestBookingPage() {
                 maxEventsPerDay={4}
               />
 
-              {daySlots.length > 0 && (
+              {daySlots.some((s) => s.isOccupied) && (
+                <>
+                  <Divider label="Ваши записи" labelPosition="left" />
+                  <SimpleGrid cols={{ base: 2, sm: 3 }}>
+                    {daySlots.filter((s) => s.isOccupied).map((slot) => (
+                      <Card key={slot.id} padding="sm" radius="md" withBorder bg="blue.0">
+                        <Text size="sm" ta="center">
+                          {dayjs(slot.startTime).format('HH:mm')} –{' '}
+                          {dayjs(slot.endTime).format('HH:mm')}
+                        </Text>
+                        <Text size="xs" ta="center" c="blue">
+                          ✓ Вы уже записаны
+                        </Text>
+                      </Card>
+                    ))}
+                  </SimpleGrid>
+                </>
+              )}
+
+              {selectableSlots.length > 0 && (
                 <>
                   <Divider label={dayjs(selectedDate).format('D MMMM, dddd')} labelPosition="left" />
                   <SimpleGrid cols={{ base: 2, sm: 3 }}>
-                    {daySlots.map((slot) => (
+                    {selectableSlots.map((slot) => (
                       <Card
                         key={slot.id}
                         padding="sm"

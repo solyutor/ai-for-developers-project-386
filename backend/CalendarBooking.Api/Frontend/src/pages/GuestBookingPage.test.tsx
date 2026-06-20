@@ -127,7 +127,7 @@ describe('GuestBookingPage', () => {
     })
     await user.click(screen.getByText('Консультация'))
     await waitFor(() => {
-      expect(mockFetchAvailableSlots).toHaveBeenCalledWith('et-1')
+      expect(mockFetchAvailableSlots).toHaveBeenCalledWith('et-1', undefined)
     })
   })
 

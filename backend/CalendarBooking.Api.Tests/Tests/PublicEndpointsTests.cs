@@ -79,6 +79,46 @@ public class PublicEndpointsTests
     }
 
     [Test]
+    public async Task GetAvailableSlots_WithEmail_ReturnsMyBooking()
+    {
+        await using var factory = new CustomWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var createPayload = new CreateEventTypeRequest
+        {
+            Name = "Consultation",
+            Description = "desc",
+            DurationMinutes = 60,
+            SlotIntervalMinutes = 60,
+        };
+        var createResponse = await client.PostAsJsonAsync("/api/event-types", createPayload);
+        var eventType = await createResponse.Content.ReadFromJsonAsync<EventType>();
+        var email = "guest@example.com";
+
+        var slotsResponse = await client.GetAsync($"/api/slots?eventTypeId={eventType!.Id}");
+        var allSlots = await slotsResponse.Content.ReadFromJsonAsync<Slot[]>();
+
+        var firstSlot = allSlots!.First(s => !s.IsOccupied);
+
+        var bookingPayload = new CreateBookingRequest
+        {
+            SlotId = firstSlot.Id,
+            GuestName = "Guest",
+            GuestEmail = email,
+        };
+        await client.PostAsJsonAsync("/api/public/bookings", bookingPayload);
+
+        var availableResponse = await client.GetAsync(
+            $"/api/public/event-types/{eventType.Id}/slots?email={email}");
+        var availableSlots = await availableResponse.Content.ReadFromJsonAsync<Slot[]>();
+
+        Assert.That(availableSlots, Is.Not.Null);
+        Assert.That(availableSlots!.Any(s => s.Id == firstSlot.Id), Is.True);
+        var mySlot = availableSlots!.First(s => s.Id == firstSlot.Id);
+        Assert.That(mySlot.IsOccupied, Is.True);
+    }
+
+    [Test]
     public async Task CreateBooking_ReturnsCreated()
     {
         await using var factory = new CustomWebApplicationFactory();
