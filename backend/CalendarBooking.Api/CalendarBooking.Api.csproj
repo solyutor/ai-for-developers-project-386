@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <!-- Frontend (Vite + React) build integration -->
-  <Target Name="NpmInstall" BeforeTargets="BuildFrontend" Condition="!Exists('Frontend/node_modules')">
+  <Target Name="NpmInstall" BeforeTargets="BuildFrontend" Condition="Exists('Frontend/package.json') And !Exists('Frontend/node_modules')">
     <Exec Command="npm install" WorkingDirectory="Frontend" />
   </Target>
 
