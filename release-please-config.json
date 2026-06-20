@@ -7,7 +7,8 @@
         "frontend/package.json",
         {
           "path": "backend/CalendarBooking.Api/Directory.Build.props",
-          "type": "xml"
+          "type": "xml",
+          "xpath": "/Project/PropertyGroup/Version"
         }
       ]
     }
