@@ -2,15 +2,27 @@ name: CI
 
 on:
   push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-
-permissions:
-  contents: read
 
 jobs:
-  integration-tests:
+  create-pr:
+    if: github.ref_name != 'master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: master
+          branch: ${{ github.ref_name }}
+          title: "Auto PR: ${{ github.ref_name }}"
+          body: "Automated PR created on push to ${{ github.ref_name }}."
+
+  e2e-tests:
+    if: github.ref_name != 'master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,8 +63,7 @@ jobs:
           retention-days: 7
 
   release-please:
-    if: github.event_name == 'push'
-    needs: [integration-tests]
+    if: github.ref_name == 'master'
     runs-on: ubuntu-latest
     permissions:
       contents: write
