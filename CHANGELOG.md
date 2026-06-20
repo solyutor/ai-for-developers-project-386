@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/solyutor/ai-for-developers-project-386/compare/calendar-booking-v1.0.0...calendar-booking-v1.1.0) (2026-06-20)
+
+
+### Features
+
+* show guest's own bookings on calendar and fix day navigation ([ca763fd](https://github.com/solyutor/ai-for-developers-project-386/commit/ca763fdf312cdb4185469c469c1f13fa801f1f79))
+
 ## 1.0.0 (2026-06-20)
 
 
