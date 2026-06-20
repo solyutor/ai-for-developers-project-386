@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="backend/CalendarBooking.Api/CalendarBooking.Api.csproj" />
+  <Project Path="backend/CalendarBooking.Api.Tests/CalendarBooking.Api.Tests.csproj" />
+  <Folder Name="/Frontend/" />
+</Solution>

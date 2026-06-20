@@ -25,7 +25,7 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: 'cd ../frontend && npm run dev',
+      command: 'cd ../backend/CalendarBooking.Api/Frontend && npm run dev',
       port: 5173,
       reuseExistingServer: !process.env.CI,
       timeout: 30000,

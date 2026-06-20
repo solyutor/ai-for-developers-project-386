@@ -14,4 +14,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
   </ItemGroup>
 
+  <!-- Frontend (Vite + React) build integration -->
+  <Target Name="NpmInstall" BeforeTargets="BuildFrontend" Condition="!Exists('Frontend/node_modules')">
+    <Exec Command="npm install" WorkingDirectory="Frontend" />
+  </Target>
+
+  <Target Name="BuildFrontend" BeforeTargets="Build"
+          Condition="Exists('Frontend/package.json') And (!Exists('wwwroot/index.html') Or '$(BuildFrontend)' == 'true' Or '$(Configuration)' == 'Release')">
+    <Exec Command="npm run build" WorkingDirectory="Frontend" />
+  </Target>
+
 </Project>

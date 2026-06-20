@@ -24,31 +24,20 @@ jobs:
           node-version: 22
           cache: 'npm'
           cache-dependency-path: |
-            frontend/package-lock.json
+            backend/CalendarBooking.Api/Frontend/package-lock.json
             e2e/package-lock.json
-
-      - name: Build backend
-        run: dotnet build
-        working-directory: backend/CalendarBooking.Api
 
       - name: Install frontend dependencies
         run: npm ci
-        working-directory: frontend
+        working-directory: backend/CalendarBooking.Api/Frontend
 
-      - name: Build frontend
-        run: npm run build
-        working-directory: frontend
+      - name: Build backend (also builds frontend in Release)
+        run: dotnet build -c Release
+        working-directory: backend/CalendarBooking.Api
 
       - name: Install E2E dependencies
         run: npm ci
         working-directory: e2e
-
-      - name: Copy frontend to backend wwwroot
-        run: |
-          rm -rf wwwroot
-          mkdir -p wwwroot
-          cp -r ../frontend/dist/* wwwroot/
-        working-directory: backend/CalendarBooking.Api
 
       - name: Run Playwright tests (backend-served)
         run: npx playwright test --config=playwright.backend.config.ts

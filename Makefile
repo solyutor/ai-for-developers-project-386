@@ -1,11 +1,12 @@
 .PHONY: dev backend prism frontend test build lint stop check e2e-install e2e e2e-ui e2e-headed e2e-mcp e2e-mcp-headless deploy-local e2e-backend
 
 PORT ?= 4010
+FRONTEND_DIR = backend/CalendarBooking.Api/Frontend
 
 dev:
 	$(MAKE) stop
 	cd backend/CalendarBooking.Api && dotnet run --urls "http://localhost:4010" &
-	cd frontend && npm run dev &
+	cd $(FRONTEND_DIR) && npm run dev &
 	wait
 
 backend:
@@ -16,7 +17,7 @@ prism:
 	cd typespec && npx prism mock tsp-output/openapi/openapi.yaml --port 4010
 
 frontend:
-	cd frontend && npm run dev
+	cd $(FRONTEND_DIR) && npm run dev
 
 deploy-local: stop
 	docker build -t calendar-booking .
@@ -35,10 +36,7 @@ e2e-headed: e2e-install
 	cd e2e && npx playwright test --headed
 
 e2e-backend: e2e-install
-	cd frontend && npm run build
-	rm -rf backend/CalendarBooking.Api/wwwroot
-	mkdir -p backend/CalendarBooking.Api/wwwroot
-	cp -r frontend/dist/* backend/CalendarBooking.Api/wwwroot/
+	dotnet build -c Release backend/CalendarBooking.Api
 	cd e2e && npx playwright test --config=playwright.backend.config.ts
 
 e2e-ui: e2e-install
@@ -51,10 +49,10 @@ e2e-mcp-headless:
 	cd e2e && npx @playwright/mcp@latest --headless
 
 build:
-	cd frontend && npm run build
+	cd $(FRONTEND_DIR) && npm run build
 
 lint:
-	cd frontend && npm run lint
+	cd $(FRONTEND_DIR) && npm run lint
 
 check:
 	@curl -sf http://localhost:$(PORT)/api/event-types > /dev/null && echo "✓ Backend OK" || echo "✗ Backend not responding"

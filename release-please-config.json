@@ -4,7 +4,7 @@
       "release-type": "node",
       "package-name": "calendar-booking",
       "extra-files": [
-        "frontend/package.json",
+        "backend/CalendarBooking.Api/Frontend/package.json",
         {
           "path": "backend/CalendarBooking.Api/Directory.Build.props",
           "type": "xml",
